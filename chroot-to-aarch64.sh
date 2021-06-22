@@ -39,23 +39,3 @@ chroot /mnt/rpi-image /bin/bash
 # unmount everything
 umount -lf /mnt/rpi-image/{dev/pts,dev,sys,proc,boot,run}
 umount -lf /mnt/rpi-image
-
-
-
-# KNOWN ISSUES
-#
-# 1	sudo: no tty present and no askpass program specified
-
-# Explanation: The error message sudo: no tty present and no askpass program specified will occur 
-# 	       when the sudo command is trying to execute a command that requires a password 
-#	       but sudo does not have access to a tty to prompt the user for a passphrase. 
-#	       As it can’t find a tty, sudo fall back to an askpass method but can’t find an 
-#	       askpass command configured.
-#
-# Solution: Execute a command with sudo and no password requirements
-#
-# This is by adding to /etc/sudoers:
-#
-#	%admin  ALL=(ALL) NOPASSWD:ALL
-
-
