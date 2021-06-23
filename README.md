@@ -23,7 +23,7 @@ Dynamic binary translation (DBT) looks at a short sequence of code—typically o
 
 # QEMU 
 
-QEMU is a processor emulator knows as Hypervisor of type 2. 
+QEMU is a processor emulator and is a Hypervisor of type 2. 
 It has two operating modes:
 - User mode emulation: QEMU can launch Linux processes compiled for one CPU on another CPU, translating syscalls on the fly.
 - Full system emulation: QEMU emulates a full system (virtual machine), including a processor and various peripherals such as disk, ethernet controller etc.
