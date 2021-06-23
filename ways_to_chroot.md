@@ -12,7 +12,7 @@ dchroot is and earlier version and is being deprecated in favour of schroot.
 
 ## arch-chroot 
 
-arch-chroot is a shell script that prepares a new "root directory" with the necessary system mounts (/proc, /sys, /dev, etc.) and files (/etc/resolv.conf), then does a chroot into it.
+arch-chroot is a shell script that prepares a new "root directory" with the necessary system mounts (/proc, /sys, /dev, etc.) and files (/etc/resolv.conf), then does a chroot into it. Once you exit from the environment system mounts (mounted before) are unmounted automaticaly.
 
 Instal on Ubuntu with: 
 
