@@ -1,4 +1,4 @@
-# Disk Image Utilities
+# Disk Image Automata Server
 
 ## Dependencies
 
