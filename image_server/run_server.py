@@ -13,6 +13,7 @@ def is_distro_different_then_current(img1, img2):
 Main func
 '''
 if __name__ == '__main__':
+    # TODO: /dev/sd* gets assigned according to the order plugged in
     devs = {
         'sda' : {
             'img_version' : None,
@@ -36,7 +37,8 @@ if __name__ == '__main__':
         # Detect if cards are plugged
         for dev in devs:
             path = os.path.join('/dev', dev) 
-            if (path):
+            print("---------------------------")
+            if (os.path.exists(path)):
                 # Fetch latest 
                 ad = gld.accessDatabase(devs[dev]['distro'])
                 latest_fetched_package = ad.fetch_latest_online()
@@ -65,14 +67,14 @@ if __name__ == '__main__':
                 if is_distro_different_then_current(devs[dev]['img_version'], latest_fetched_package):
                     # Flash image
                     cmd = 'dd if='+os.path.join(os.environ['HOME'], latest_fetched_package)+' | pv | dd of='+path
-                    print(cmd)
-                    sys.exit()
-                    gld.execute(cmd)
+                    gld.execute(cmd, os.environ['HOME'])
                     devs[dev]['img_version'] = latest_fetched_package
                 else:
                     print("Latest image of "+devs[dev]['distro']+" installed on "+dev)
 
             else:
                 devs[dev]['img_version'] = None 
+                print("Device "+dev+" not plugged in!")
+
 
         time.sleep(1) # TODO: Create an event based system 
