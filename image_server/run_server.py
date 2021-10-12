@@ -13,7 +13,12 @@ def is_distro_different_then_current(img1, img2):
 Main func
 '''
 if __name__ == '__main__':
-    # TODO: /dev/sd* gets assigned according to the order plugged in
+
+    home = "/home/ubuntu"
+    if os.geteuid() != 0:
+        exit("You need to have root privileges to run this script.\nPlease try again, this time using 'sudo'. Exiting.")
+
+    # NOTE: /dev/sd* gets assigned according to the order plugged in
     devs = {
         'sda' : {
             'img_version' : None,
@@ -51,7 +56,8 @@ if __name__ == '__main__':
                 # if there was a package file fetched
                 if latest_fetched_package != 0:
                     # first compare it to the currently installed package
-                    diff = ad.is_pkg_different_then_current(latest_fetched_package)
+                    filename = latest_fetched_package[:len(latest_fetched_package) - 3]
+                    diff = ad.is_pkg_different_then_current(filename)
                     if diff == False:
                         print("The latest package is already downloaded")
                     elif diff == True:
@@ -66,8 +72,8 @@ if __name__ == '__main__':
                 # Check if latest image installed on the SD card
                 if is_distro_different_then_current(devs[dev]['img_version'], latest_fetched_package):
                     # Flash image
-                    cmd = 'dd if='+os.path.join(os.environ['HOME'], latest_fetched_package)+' | pv | dd of='+path
-                    gld.execute(cmd, os.environ['HOME'])
+                    cmd = 'sudo dd if='+os.path.join(home, filename)+' of='+path
+                    gld.execute(cmd, home)
                     devs[dev]['img_version'] = latest_fetched_package
                 else:
                     print("Latest image of "+devs[dev]['distro']+" installed on "+dev)

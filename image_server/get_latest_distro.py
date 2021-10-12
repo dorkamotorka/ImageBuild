@@ -16,6 +16,7 @@ class accessDatabase:
     def __init__(self, package):
         self.url = "https://ubiquity-pi-image.sfo2.cdn.digitaloceanspaces.com/"
         self.package_tag = package
+        self.home = "/home/ubuntu"
 
     def connects_to_url(self):
         data, code = execute('timeout 20s wget -q --spider ' + self.url, "/tmp/")
@@ -59,13 +60,12 @@ class accessDatabase:
         return latest
 
     def is_pkg_different_then_current(self, pkg_name):
-        if not path.exists(os.environ['HOME']):
-          print("Directory "+os.environ['HOME']+" does not exist")
+        if not path.exists(self.home):
+          print("Directory "+self.home+" does not exist")
           return -1
 
         # Check if package already installed in the home directory
-        filename = pkg_name[:len(pkg_name) - 3]
-        if os.path.isfile(os.path.join(os.environ['HOME'], filename)):
+        if os.path.exists(os.path.join(self.home, pkg_name)):
             return False
 
         return True
@@ -103,14 +103,14 @@ class accessDatabase:
     def update_command_list(self, package_name):
         self.commandlist = [
             # delete old zip and cyacd files in home dir
-            #["find . -maxdepth 1 -name '*.zip' -type f -delete",	       os.environ['HOME'],		"Removing old zip file..."],
+            #["find . -maxdepth 1 -name '*.zip' -type f -delete",	       self.home,		"Removing old zip file..."],
             # first download to tmp and then move to home dir so package updates could not be executed with half-downloaded zip.
             # also if download is stopped mid way because of network loss, the download is automatically restarted because the file was
             # not dowloaded directly into ~/
             ["wget --no-check-certificate "+self.url+package_name,		        "/tmp/",	          	"Downloading package to tmp..."],
-            ["mv "+package_name+" "+os.environ['HOME'],	      	                "/tmp/",	          	"Moving from tmp to home..."],
+            ["mv "+package_name+" "+self.home,	      	                "/tmp/",	          	"Moving from tmp to home..."],
             # unzip everything to home dir and then remove src, build devel -> so only cyacd files (and others?) remain in home dir
-            ["unxz "+os.path.join(os.environ['HOME'], package_name),	        			        os.environ['HOME'],		"Extracting package..."],
+            ["unxz "+os.path.join(self.home, package_name),	        			        self.home,		"Extracting package..."],
         ]
 
 if __name__ == '__main__':
