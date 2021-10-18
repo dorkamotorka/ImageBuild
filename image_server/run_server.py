@@ -22,19 +22,19 @@ if __name__ == '__main__':
     devs = {
         'sda' : {
             'img_version' : None,
-            'distro' : 'kinetic',
+            'distro' : 'xenial',
                 },
         'sdb' : {
             'img_version' : None,
-            'distro' : 'noetic',
+            'distro' : 'xenial',
                 },
         'sdc' : { 
             'img_version' : None,
-            'distro' : 'breadcrumb',
+            'distro' : 'xenial',
                 },
         'sdd' : {
             'img_version' : None,
-            'distro' : 'avalon',
+            'distro' : 'xenial',
                 },
     }
 
@@ -72,7 +72,9 @@ if __name__ == '__main__':
                 # Check if latest image installed on the SD card
                 if is_distro_different_then_current(devs[dev]['img_version'], latest_fetched_package):
                     # Flash image
-                    cmd = 'sudo dd if='+os.path.join(home, filename)+' of='+path
+                    gld.execute('sudo rm -rf ' +path+'1', home)
+                    gld.execute('sudo rm -rf ' +path+'2', home)
+                    cmd = 'sudo dd if='+os.path.join(home, filename)+' of='+path+' status=progress'
                     gld.execute(cmd, home)
                     devs[dev]['img_version'] = latest_fetched_package
                 else:
